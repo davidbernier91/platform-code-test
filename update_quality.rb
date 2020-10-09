@@ -1,49 +1,21 @@
-require 'award'
+require './award.rb'
 
 def update_quality(awards)
-  awards.each do |award|
-    if award.name != 'Blue First' && award.name != 'Blue Compare'
-      if award.quality > 0
-        if award.name != 'Blue Distinction Plus'
-          award.quality -= 1
-        end
-      end
-    else
-      if award.quality < 50
-        award.quality += 1
-        if award.name == 'Blue Compare'
-          if award.expires_in < 11
-            if award.quality < 50
-              award.quality += 1
-            end
-          end
-          if award.expires_in < 6
-            if award.quality < 50
-              award.quality += 1
-            end
-          end
-        end
-      end
-    end
-    if award.name != 'Blue Distinction Plus'
-      award.expires_in -= 1
-    end
-    if award.expires_in < 0
-      if award.name != 'Blue First'
-        if award.name != 'Blue Compare'
-          if award.quality > 0
-            if award.name != 'Blue Distinction Plus'
-              award.quality -= 1
-            end
-          end
-        else
-          award.quality = award.quality - award.quality
-        end
-      else
-        if award.quality < 50
-          award.quality += 1
-        end
-      end
+  awards.each do |award|  
+    case award.name
+      when 'Blue First'
+        award.update_blue_first
+        award.decrement_day
+      when 'Blue Compare'
+        award.update_blue_compare
+        award.decrement_day
+      when 'Blue Distinction Plus'
+        award.update_blue_distinction_plus
+      when 'Blue Star'
+        award.decrement_day
+      else 
+        award.update_normal_award
+        award.decrement_day
     end
   end
 end
